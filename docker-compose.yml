@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27027:27017
+    restart: always
+    volumes:
+      - db_volume:/data/db
+  web:
+    image: web
+    ports:
+      - '80:80'
+    depends_on:
+      - mongodb
+      - api
+  api:
+    image: api
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/YOU_DATABASE_NAME
+volumes:
+  db_volume:
+    external: false
